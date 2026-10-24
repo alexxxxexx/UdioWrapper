@@ -13,8 +13,9 @@ import time
 class UdioWrapper:
     API_BASE_URL = "https://www.udio.com/api"
 
-    def __init__(self, auth_token):
+    def __init__(self, auth_token, captcha_token=None):
         self.auth_token = auth_token
+        self.captcha_token = captcha_token
         self.all_track_ids = []
 
     def make_request(self, url, method, data=None, headers=None):
@@ -141,6 +142,8 @@ class UdioWrapper:
         data = {"prompt": prompt, "samplerOptions": {"seed": seed}}
         if custom_lyrics:
             data["lyricInput"] = custom_lyrics
+        if self.captcha_token:
+            data["captchaToken"] = self.captcha_token
         response = self.make_request(url, 'POST', data, headers)
         return response.json() if response else None
 
@@ -158,6 +161,8 @@ class UdioWrapper:
         }
         if custom_lyrics:
             data["lyricInput"] = custom_lyrics
+        if self.captcha_token:
+            data["captchaToken"] = self.captcha_token
         response = self.make_request(url, 'POST', data, headers)
         return response.json() if response else None
 
@@ -176,6 +181,8 @@ class UdioWrapper:
         }
         if custom_lyrics:
             data["lyricInput"] = custom_lyrics
+        if self.captcha_token:
+            data["captchaToken"] = self.captcha_token
         response = self.make_request(url, 'POST', data, headers)
         return response.json() if response else None
 
@@ -219,4 +226,3 @@ class UdioWrapper:
             print(f"Downloaded {song_title} with url {song_url} to {file_path}")
         except requests.exceptions.RequestException as e:
             print(f"Failed to download the song. Error: {e}")
-
